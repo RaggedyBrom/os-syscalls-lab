@@ -92,12 +92,23 @@ sys_uptime(void)
   return xticks;
 }
 
+// Stores a trace mask in the current process's metadata
 uint64
 sys_trace(void)
 {
-  int n;
+  int mask;
+  struct proc *proc;
 
-  argint(0, &n);
-  printf("hello from sys_trace\n");
-  return 0;
+  argint(0, &mask);
+  proc = myproc();
+
+  if (proc == 0)
+  {
+    return -1;
+  }
+  else
+  {
+    proc->tracemask = mask;
+    return 0;
+  }
 }
