@@ -5,6 +5,7 @@
 #include "memlayout.h"
 #include "spinlock.h"
 #include "proc.h"
+#include "sysinfo.h"
 
 uint64
 sys_exit(void)
@@ -115,8 +116,27 @@ sys_trace(void)
   }
 }
 
+extern uint64 countfree(void);
+extern uint64 countproc(void);
+
 uint64
 sys_sysinfo(void)
 {
+  uint64 addr;      // Address of the sysinfo struct, passed as an argument
+  struct proc *p;   // Pointer to the current process
+  uint64 freemem;   // Amount of free memory available
+  uint64 nproc;     // Number of processes currently in use
+
+  if ((p = myproc()) == 0)
+    return -1;
+
+  argaddr(0, &addr);
+
+  // Copy out the freemem and nproc values to the userspace sysinfo struct
+  if (copyout(p->pagetable, addr, (char*)&freemem, sizeof(uint64)) < 0)
+    return -1;
+  if (copyout(p->pagetable, addr + sizeof(uint64), (char*)&nproc, sizeof(uint64)) < 0)
+    return -1;
+
   return 0;
 }
