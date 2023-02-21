@@ -116,7 +116,7 @@ sys_trace(void)
   }
 }
 
-extern uint64 countfree(void);
+extern uint64 countfreemem(void);
 extern uint64 countproc(void);
 
 uint64
@@ -131,6 +131,9 @@ sys_sysinfo(void)
     return -1;
 
   argaddr(0, &addr);
+
+  freemem = countfreemem();;
+  nproc = countproc();
 
   // Copy out the freemem and nproc values to the userspace sysinfo struct
   if (copyout(p->pagetable, addr, (char*)&freemem, sizeof(uint64)) < 0)
