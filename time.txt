@@ -1,0 +1,5 @@
+Using gdb: 1.5 hrs
+System call tracing: 2.5 hrs
+Sysinfo: 1.5 hrs
+----------------------
+Total time: 5.5 hrs
